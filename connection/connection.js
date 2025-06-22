@@ -1,10 +1,17 @@
 import { Sequelize } from "sequelize";
 
-// ⚠️ Reemplazá estos valores con los de tu base de datos local
-const connection = new Sequelize("estacionamiento_db", "root", "tu_contraseña", {
+// Reemplazá la contraseña si tenés una configurada, o dejá "" si no
+const connection = new Sequelize("estacionamiento_db", "root", "", {
   host: "localhost",
-  dialect: "mysql", // Sequelize usa 'mysql' aunque uses MariaDB
-  logging: false,   // opcional: para no ver las queries en consola
+  dialect: "mysql",
+  logging: false,
 });
+
+try {
+  await connection.authenticate();
+  console.log("✅ Conexión a la base de datos establecida correctamente.");
+} catch (error) {
+  console.error("❌ No se pudo conectar a la base de datos:", error);
+}
 
 export default connection;

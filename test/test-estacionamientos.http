@@ -1,0 +1,2 @@
+### Obtener todos los estacionamientos
+GET http://localhost:3000/estacionamientos

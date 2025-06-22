@@ -1,15 +1,19 @@
 import express from "express";
 import estacionamientoRoutes from "./routes/estacionamientos.routes.js";
-import connection from "./connection/connection.js"; // para probar conexión a la base
+import ocupacionRoutes from "./routes/routersOcupacion.js";
+import vehiculoRoutes from "./routes/vehiculoRoutes.js";
+import connection from "./connection/connection.js";
 
 const app = express();
 const PORT = 3000;
 
 // Middleware para parsear JSON
-app.use(express.json());
+app.use(express.json({ strict: false }));
 
 // Rutas
 app.use("/estacionamientos", estacionamientoRoutes);
+app.use("/ocupaciones", ocupacionRoutes);
+app.use("/vehiculos", vehiculoRoutes);
 
 // Probar conexión a la base
 try {

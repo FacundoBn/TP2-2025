@@ -1,11 +1,18 @@
-const express = require('express');
+import express from "express";
+import {
+  ingresarVehiculo,
+  salirVehiculo,
+  salirVehiculoPorPatente, 
+  listarActivos,
+  listarInactivos,
+} from "../controllers/ocupacionController.js";
+
 const router = express.Router();
-const ocupacionCtrl = require('../controllers/ocupacion.controller');
 
-router.post('/ingresar', ocupacionCtrl.ingresarVehiculo);
-router.put('/salir/:id', ocupacionCtrl.salirVehiculo);
-router.get('/activos', ocupacionCtrl.listarActivos);
-router.get('/inactivos', ocupacionCtrl.listarInactivos);
+router.post("/ingresar", ingresarVehiculo);
+router.put("/salir/:id", salirVehiculo);
+router.put("/salir/patente/:patente",  salirVehiculoPorPatente); 
+router.get("/activos", listarActivos);
+router.get("/inactivos", listarInactivos);
 
-module.exports = router;
-
+export default router;

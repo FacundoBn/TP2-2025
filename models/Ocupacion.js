@@ -1,5 +1,12 @@
-module.exports = (sequelize, DataTypes) => {
-  const Ocupacion = sequelize.define("Ocupacion", {
+import { DataTypes, Model } from "sequelize";
+import connection from "../connection/connection.js";
+import Estacionamiento from "./Estacionamiento.js";
+import Vehiculo from "./Vehiculo.js";
+
+class Ocupacion extends Model {}
+
+Ocupacion.init(
+  {
     hora_entrada: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -8,24 +15,33 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
-  }, 
-                                     
-{
-    tableName: 'ocupaciones'
-  });
+    lugar_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    patente: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize: connection,
+    modelName: "Ocupacion",
+    tableName: "ocupaciones",
+    timestamps: false,
+  }
+);
 
-  Ocupacion.associate = (models) => {
-    Ocupacion.belongsTo(models.Vehiculo, {
-      foreignKey: 'patente',
-      targetKey: 'patente',
-      onDelete: 'CASCADE'
-    });
-    Ocupacion.belongsTo(models.Lugar, {
-      foreignKey: 'lugar_id',
-      onDelete: 'CASCADE'
-    });
-  };
+// Asociaciones
+Ocupacion.belongsTo(Vehiculo, {
+  foreignKey: "patente",
+  targetKey: "patente",
+  onDelete: "CASCADE",
+});
 
-  return Ocupacion;
-};
+Ocupacion.belongsTo(Estacionamiento, {
+  foreignKey: "lugar_id",
+  onDelete: "CASCADE",
+});
 
+export default Ocupacion;

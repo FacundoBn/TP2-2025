@@ -67,6 +67,49 @@ exports.listarActivos = async (req, res) => {
   }
 };
 
+export const listarHistorial = async (req, res) => {
+  try {
+    const ocupaciones = await Ocupacion.findAll({
+      include: [Vehiculo, Lugar],
+    });
+    res.json(ocupaciones);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al obtener historial", error });
+  }
+};
+
+export const obtenerOcupacionPorLugar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ocupacion = await Ocupacion.findOne({
+      where: { lugar_id: id, hora_salida: null },
+      include: [Vehiculo, Lugar],
+    });
+
+    if (!ocupacion) {
+      return res.status(404).json({ mensaje: "No hay ocupación activa en ese lugar" });
+    }
+
+    res.json(ocupacion);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al buscar ocupación por lugar", error });
+  }
+};
+export const eliminarOcupacion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ocupacion = await Ocupacion.findByPk(id);
+
+    if (!ocupacion) {
+      return res.status(404).json({ mensaje: "Ocupación no encontrada" });
+    }
+
+    await ocupacion.destroy();
+    res.json({ mensaje: "Ocupación eliminada correctamente" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al eliminar ocupación", error });
+  }
+};
 
 //lista de ocupaciones  disponibles.
 exports.listarInactivos = async (req, res) => {

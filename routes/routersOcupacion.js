@@ -1,11 +1,26 @@
-const express = require('express');
+import express from "express";
+import {
+  ingresarVehiculo,
+  salirVehiculo,
+  salirVehiculoPorPatente,
+  listarActivos,
+  listarInactivos,
+  listarHistorial,
+  obtenerOcupacionPorLugar,
+  eliminarOcupacion
+} from "../controllers/ocupacionController.js";
+
 const router = express.Router();
-const ocupacionCtrl = require('../controllers/ocupacion.controller');
 
-router.post('/ingresar', ocupacionCtrl.ingresarVehiculo);
-router.put('/salir/:id', ocupacionCtrl.salirVehiculo);
-router.get('/activos', ocupacionCtrl.listarActivos);
-router.get('/inactivos', ocupacionCtrl.listarInactivos);
+router.post("/ingresar", ingresarVehiculo);
+router.put("/salir/:id", salirVehiculo);
+router.put("/salir/patente/:patente", salirVehiculoPorPatente);
+router.get("/activos", listarActivos);
+router.get("/inactivos", listarInactivos);
 
-module.exports = router;
+// Los 3 nuevoss:
+router.get("/historial", listarHistorial);
+router.get("/lugar/:id", obtenerOcupacionPorLugar);
+router.delete("/eliminar/:id", eliminarOcupacion);
 
+export default router;

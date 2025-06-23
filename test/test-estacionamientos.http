@@ -1,2 +1,23 @@
 ### Obtener todos los estacionamientos
 GET http://localhost:3000/estacionamientos
+
+### Borrar un lugar
+DELETE http://localhost:3000/estacionamientos/10
+Content-Type: application/json
+
+### Listar todos los usuarios
+GET http://localhost:3000/usuarios
+Content-Type: application/json
+
+
+### Crear nuevo usuario
+POST http://localhost:3000/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Clara Franzoni",
+  "email": "clara@correo.com",
+  "password": "claveSegura123",
+  "rol": "admin"
+}
+

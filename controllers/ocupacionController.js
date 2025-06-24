@@ -8,7 +8,6 @@ export const ingresarVehiculo = async (req, res) => {
   try {
     const { patente } = req.body;
 
-    // lo buscamos:
     const yaIngresado = await Ocupacion.findOne({
       where: { patente, hora_salida: null },
     });
@@ -16,20 +15,17 @@ export const ingresarVehiculo = async (req, res) => {
       return res.status(400).json({ mensaje: "El vehículo ya está dentro del estacionamiento" });
     }
 
-    // si no lo encontramos buscamos un lugar
     const lugar = await Lugar.findOne({ where: { estado: "disponible" } });
     if (!lugar) {
       return res.status(400).json({ mensaje: "No hay lugares disponibles" });
     }
 
-    // si hay "lugar" creamos una ocupación y la asignamos al vehículo
     const ocupacion = await Ocupacion.create({
       patente,
       lugar_id: lugar.id,
       hora_entrada: new Date(),
     });
 
-    // cambiamos el estado del lugar
     await lugar.update({ estado: "ocupado" });
 
     res.status(201).json(ocupacion);
@@ -38,18 +34,16 @@ export const ingresarVehiculo = async (req, res) => {
   }
 };
 
-// 🚪 Salida de vehículo
+// 🚪 Salida de vehículo por ID
 export const salirVehiculo = async (req, res) => {
   try {
     const { id } = req.params;
     const ocupacion = await Ocupacion.findByPk(id);
 
-    // validamos si existe la hora de salida de dicha ocupación o si no existe la misma
     if (!ocupacion || ocupacion.hora_salida) {
       return res.status(404).json({ mensaje: "Ocupación no encontrada o ya finalizada" });
     }
 
-    // la creamos y asignamos la hora de salida
     const horaSalida = new Date();
     const horaEntrada = new Date(ocupacion.hora_entrada);
     const horas = Math.ceil((horaSalida - horaEntrada) / (1000 * 60 * 60));
@@ -79,7 +73,7 @@ export const listarActivos = async (req, res) => {
   }
 };
 
-// 📋 Lista de ocupaciones inactivas
+// 📋 Lista de ocupaciones inactivas (historial)
 export const listarInactivos = async (req, res) => {
   try {
     const ocupaciones = await Ocupacion.findAll({
@@ -92,7 +86,43 @@ export const listarInactivos = async (req, res) => {
   }
 };
 
-// Salida por patente
+// 🔍 Ocupación por lugar
+export const obtenerOcupacionPorLugar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ocupacion = await Ocupacion.findOne({
+      where: { lugar_id: id, hora_salida: null },
+      include: [Vehiculo, Lugar],
+    });
+
+    if (!ocupacion) {
+      return res.status(404).json({ mensaje: "No hay ocupación activa en ese lugar" });
+    }
+
+    res.json(ocupacion);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al buscar ocupación por lugar", error });
+  }
+};
+
+// 🗑 Eliminar ocupación (admin)
+export const eliminarOcupacion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ocupacion = await Ocupacion.findByPk(id);
+
+    if (!ocupacion) {
+      return res.status(404).json({ mensaje: "Ocupación no encontrada" });
+    }
+
+    await ocupacion.destroy();
+    res.json({ mensaje: "Ocupación eliminada correctamente" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al eliminar ocupación", error });
+  }
+};
+
+// 🚘 Salida por patente
 export const salirVehiculoPorPatente = async (req, res) => {
   const { patente } = req.params;
 
@@ -138,5 +168,3 @@ export const salirVehiculoPorPatente = async (req, res) => {
     });
   }
 };
-
-

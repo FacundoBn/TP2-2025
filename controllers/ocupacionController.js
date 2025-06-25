@@ -77,12 +77,24 @@ export const listarActivos = async (req, res) => {
 export const listarInactivos = async (req, res) => {
   try {
     const ocupaciones = await Ocupacion.findAll({
-      where: { hora_salida: { [Ocupacion.sequelize.Op.not]: null } },
+      where: { hora_salida: { [Op.not]: null } },
       include: [Vehiculo, Lugar],
     });
     res.json(ocupaciones);
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener ocupaciones inactivas", error });
+  }
+};
+
+// 🧾 Historial completo (activos + inactivos)
+export const listarHistorial = async (req, res) => {
+  try {
+    const ocupaciones = await Ocupacion.findAll({
+      include: [Vehiculo, Lugar],
+    });
+    res.json(ocupaciones);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al obtener historial", error });
   }
 };
 
@@ -130,9 +142,7 @@ export const salirVehiculoPorPatente = async (req, res) => {
     const ocupacion = await Ocupacion.findOne({
       where: {
         patente,
-        hora_salida: {
-          [Op.is]: null
-        }
+        hora_salida: { [Op.is]: null }
       }
     });
 

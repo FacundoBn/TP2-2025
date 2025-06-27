@@ -1,5 +1,6 @@
 import Usuario from "../models/Usuario.js";
-import { gentoken } from "../utils/token.js"; // asegurate de tener esta impo
+import { generarToken } from "../utils/token.js";
+
 
 // Crear usuario
 export const crearUsuario = async (req, res) => {

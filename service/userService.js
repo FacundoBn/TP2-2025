@@ -8,6 +8,7 @@ Exponer métodos que puedas usar desde el controlador. */
 import Usuario from "../models/Usuario.js";
 import { generarToken } from "../utils/token.js";
 
+
 class UserService {
   // Login de usuario
   async login(data) {

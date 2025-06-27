@@ -4,7 +4,9 @@ import {
   listarUsuarios,
   eliminarUsuario,
   actualizarUsuario,
-  loginUsuario,
+  loginUser,
+
+
 } from "../controllers/usuarioController.js";
 import { verificarToken, soloAdmin } from "../middlewares/auth.js";
 
@@ -15,6 +17,6 @@ router.get("/", verificarToken, listarUsuarios);
 router.post("/", verificarToken, soloAdmin, crearUsuario);
 router.put("/:id", verificarToken, soloAdmin, actualizarUsuario);
 router.delete("/:id", verificarToken, soloAdmin, eliminarUsuario);
-router.post("/login", loginUsuario); // sólo para validar, sin token
+router.post("/login", loginUser); // sólo para validar, sin token
 
 export default router;

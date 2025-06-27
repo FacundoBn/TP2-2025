@@ -132,17 +132,18 @@ export const loginUser = async (req, res) => {
     }
 
     const payload = {
-      id: usuario.id,
-      email: usuario.email,
-      rol: usuario.rol,
-    };
+  id: usuario.id,
+  email: usuario.email,
+  rol: usuario.rol,
+};
 
-    const token = gentoken(payload);
+const token = generarToken(payload); // <- Nombre correcto
 
-    res.json({
-      mensaje: `Bienvenido, ${usuario.nombre}.`,
-      token,
-    });
+res.json({
+  mensaje: `Bienvenido, ${usuario.nombre}.`,
+  token,
+});
+
 
   } catch (error) {
     res.status(500).json({ error: "Error al intentar iniciar sesión." });

@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuario.js";
+import { gentoken } from "../utils/token.js"; // asegurate de tener esta impo
 
 // Crear usuario
 export const crearUsuario = async (req, res) => {
@@ -110,13 +111,10 @@ export const actualizarUsuario = async (req, res) => {
 };
 
 // Login de usuario (sin token todavía)
-export const loginUsuario = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (
-    !email || !password ||
-    email.trim() === "" || password.trim() === ""
-  ) {
+  if (!email || !password || email.trim() === "" || password.trim() === "") {
     return res.status(400).json({ error: "Email y contraseña son obligatorios y no pueden estar vacíos." });
   }
 
@@ -132,7 +130,19 @@ export const loginUsuario = async (req, res) => {
       return res.status(401).json({ error: "Credenciales inválidas." });
     }
 
-    res.json({ mensaje: `Bienvenido, ${usuario.nombre}.` });
+    const payload = {
+      id: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+
+    const token = gentoken(payload);
+
+    res.json({
+      mensaje: `Bienvenido, ${usuario.nombre}.`,
+      token,
+    });
+
   } catch (error) {
     res.status(500).json({ error: "Error al intentar iniciar sesión." });
   }

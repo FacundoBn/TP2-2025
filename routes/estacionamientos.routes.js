@@ -1,16 +1,20 @@
 import { Router } from "express";
+
 import {
   getEstacionamientos,
   createEstacionamiento,
   updateEstacionamiento,
-  deleteEstacionamiento,
+  deleteEstacionamiento
 } from "../controllers/estacionamiento.controller.js";
+
+import { verificarToken, soloAdmin } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/", getEstacionamientos);              // GET /estacionamientos
-router.post("/", createEstacionamiento);           // POST /estacionamientos
-router.put("/:id", updateEstacionamiento);         // PUT /estacionamientos/:id
-router.delete("/:id", deleteEstacionamiento);      // DELETE /estacionamientos/:id
+// Rutas protegidas
+router.get("/", verificarToken, getEstacionamientos);      // admin u operador
+router.post("/", verificarToken, soloAdmin, createEstacionamiento);         // solo admin
+router.put("/:id", verificarToken, soloAdmin, updateEstacionamiento);       // solo admin
+router.delete("/:id", verificarToken, soloAdmin, deleteEstacionamiento);    // solo admin
 
 export default router;

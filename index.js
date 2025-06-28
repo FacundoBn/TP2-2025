@@ -4,9 +4,12 @@ import ocupacionRoutes from "./routes/routersOcupacion.js";
 import vehiculoRoutes from "./routes/vehiculoRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import connection from "./connection/connection.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = 3000;
+
+app.use(cookieParser()); // Cookie
 
 // Middleware para parsear JSON
 app.use(express.json({ strict: false }));

@@ -7,6 +7,11 @@ import { Op } from "sequelize";
 export const ingresarVehiculo = async (req, res) => {
   try {
     const { patente } = req.body;
+    
+    const formatoPatente = /^([A-Z]{3}[0-9]{3}|[A-Z]{2}[0-9]{3}[A-Z]{2})$/;
+    if (!formatoPatente.test(patente)) {
+      return res.status(400).json({ mensaje: "Formato de patente inválido. Ej: AAA123 o AA123BB" });
+    }
 
     const yaIngresado = await Ocupacion.findOne({
       where: { patente, hora_salida: null },
@@ -32,6 +37,7 @@ export const ingresarVehiculo = async (req, res) => {
   } catch (error) {
     res.status(500).json({ mensaje: "Error en el ingreso", error });
   }
+
 };
 
 // 🚪 Salida de vehículo por ID
@@ -139,6 +145,11 @@ export const salirVehiculoPorPatente = async (req, res) => {
   const { patente } = req.params;
 
   try {
+
+    const formatoPatente = /^([A-Z]{3}[0-9]{3}|[A-Z]{2}[0-9]{3}[A-Z]{2})$/;
+    if (!formatoPatente.test(patente)) {
+      return res.status(400).json({ mensaje: "Formato de patente inválido. Ej: AAA123 o AA123BB" });
+    }
     const ocupacion = await Ocupacion.findOne({
       where: {
         patente,

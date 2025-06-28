@@ -1,23 +1,28 @@
 
 
-### Login de usuario
+### Login y recibir cookie con token
 POST http://localhost:3000/usuarios/login
 Content-Type: application/json
 
 {
-"email": "admin@correo.com",
+  "email": "admin@correo.com",
   "password": "admin123"
-
 }
+
+### Acceder a ruta protegida con cookie (token en background)
+GET http://localhost:3000/usuarios
+
+### Logout - eliminar token
+POST http://localhost:3000/usuarios/logout
+
 
 ### Listar usuarios (requiere token válido)
 GET http://localhost:3000/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTEwNzIzMzMsImV4cCI6MTc1MTA3NTkzM30.dBPCHZ510En3DFQ6e3T6w15VWT87SxlKZjjbwG3aX7A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTExMjQ1MjAsImV4cCI6MTc1MTEyODEyMH0.MsxuWq1wqyeinaasY2ZUsAHcYxqiMnhS1mZB_BfFSiQ
 
 ### Crear usuario (sólo admin)
 POST http://localhost:3000/usuarios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTEwNjc3MzksImV4cCI6MTc1MTA3MTMzOX0.wZPdyuYVfCqVtJMw2C6rDEz-HEnjzIcxOflEFMHPoOo
 
 {
   "nombre": "Operador prueba roles",
@@ -28,4 +33,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ### Eliminar usuario (sólo admin)
 DELETE http://localhost:3000/usuarios/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJvcGVyYWRvcjFAbWFpbC5jb20iLCJyb2wiOiJvcGVyYWRvciIsImlhdCI6MTc1MTA2ODE0MiwiZXhwIjoxNzUxMDcxNzQyfQ.8BY6Ik0F7SLS1FYIG-JNOZA5RJ4rh0SXkw8RbgbzI34
+
+
+### Crear vehículo
+POST http://localhost:3000/vehiculos
+
+Content-Type: application/json
+
+{
+  "patente": "YZ12",
+  "marca": "Ford",
+  "modelo": "Fiesta"
+}
+
+### Listar vehículos
+GET http://localhost:3000/vehiculos
+
+### Eliminar vehículo
+DELETE http://localhost:3000/vehiculos/XYZ123

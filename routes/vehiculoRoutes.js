@@ -6,11 +6,17 @@ import {
   eliminarVehiculo
 } from '../controllers/vehiculoController.js';
 
+import { verificarToken, soloAdmin } from "../middlewares/auth.js";
+
+
 const router = express.Router();
 
-router.post('/', crearVehiculo);
-router.get('/', obtenerVehiculos);
-router.get('/:patente', obtenerVehiculoPorPatente);
-router.delete('/:patente', eliminarVehiculo);
+// Accesibles a cualquier usuario autenticado
+router.post("/", verificarToken, crearVehiculo);
+router.get("/", verificarToken, obtenerVehiculos);
+router.get("/:patente", verificarToken, obtenerVehiculoPorPatente);
+
+// Solo admin
+router.delete("/:patente", verificarToken, soloAdmin, eliminarVehiculo);
 
 export default router;

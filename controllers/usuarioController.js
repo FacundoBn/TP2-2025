@@ -6,20 +6,9 @@ import { generarToken } from "../utils/token.js";
 export const crearUsuario = async (req, res) => {
   const { nombre, email, password, rol } = req.body;
 
-  if (
-    !nombre || !email || !password || !rol ||
-    nombre.trim() === "" || email.trim() === "" || password.trim() === "" || rol.trim() === ""
-  ) {
-    return res.status(400).json({ error: "Todos los campos son obligatorios y no pueden estar vacíos." });
-  }
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: "Formato de email inválido." });
-  }
-
-  if (password.length < 6) {
-    return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres." });
   }
 
   const rolesValidos = ["admin", "operador"];
@@ -111,7 +100,7 @@ export const actualizarUsuario = async (req, res) => {
   }
 };
 
-// Login de usuario (sin token todavía)
+// Login de usuario (con token en cookie)
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -132,20 +121,30 @@ export const loginUser = async (req, res) => {
     }
 
     const payload = {
-  id: usuario.id,
-  email: usuario.email,
-  rol: usuario.rol,
-};
+      id: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
 
-const token = generarToken(payload); // <- Nombre correcto
-
-res.json({
-  mensaje: `Bienvenido, ${usuario.nombre}.`,
-  token,
-});
-
+    const token = generarToken(payload); 
+    // ✅ Enviar el token como cookie segura y httpOnly
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: false, // en producción ponelo en true (HTTPS)
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000, // 1 hora
+      })
+      .json({ mensaje: `Bienvenido, ${usuario.nombre}` });
 
   } catch (error) {
     res.status(500).json({ error: "Error al intentar iniciar sesión." });
   }
 };
+
+// Logout: eliminar cookie con token
+export const logoutUsuario = (req, res) => {
+  res.clearCookie("token"); // borra la cookie
+  res.json({ mensaje: "Sesión cerrada correctamente." });
+};
+

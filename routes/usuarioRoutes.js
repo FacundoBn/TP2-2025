@@ -5,6 +5,7 @@ import {
   eliminarUsuario,
   actualizarUsuario,
   loginUser,
+  logoutUsuario
 
 
 } from "../controllers/usuarioController.js";
@@ -17,6 +18,7 @@ router.get("/", verificarToken, listarUsuarios);
 router.post("/", verificarToken, soloAdmin, crearUsuario);
 router.put("/:id", verificarToken, soloAdmin, actualizarUsuario);
 router.delete("/:id", verificarToken, soloAdmin, eliminarUsuario);
-router.post("/login", loginUser); // sólo para validar, sin token
+router.post("/login", loginUser); 
+router.post("/logout", logoutUsuario);
 
 export default router;

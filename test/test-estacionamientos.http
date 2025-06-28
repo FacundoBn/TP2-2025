@@ -1,25 +1,4 @@
-### Obtener todos los estacionamientos
-GET http://localhost:3000/estacionamientos
 
-### Borrar un lugar
-DELETE http://localhost:3000/estacionamientos/10
-Content-Type: application/json
-
-### Listar todos los usuarios
-GET http://localhost:3000/usuarios
-Content-Type: application/json
-
-
-### Crear nuevo usuario
-POST http://localhost:3000/usuarios
-Content-Type: application/json
-
-{
-  "nombre": "Clara Franzoni",
-  "email": "clara@correo.com",
-  "password": "claveSegura123",
-  "rol": "admin"
-}
 
 ### Login de usuario
 POST http://localhost:3000/usuarios/login
@@ -31,3 +10,22 @@ Content-Type: application/json
 
 }
 
+### Listar usuarios (requiere token válido)
+GET http://localhost:3000/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTEwNzIzMzMsImV4cCI6MTc1MTA3NTkzM30.dBPCHZ510En3DFQ6e3T6w15VWT87SxlKZjjbwG3aX7A
+
+### Crear usuario (sólo admin)
+POST http://localhost:3000/usuarios
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTEwNjc3MzksImV4cCI6MTc1MTA3MTMzOX0.wZPdyuYVfCqVtJMw2C6rDEz-HEnjzIcxOflEFMHPoOo
+
+{
+  "nombre": "Operador prueba roles",
+  "email": "operador1@mail.com",
+  "password": "operador12345",
+  "rol": "operador"
+}
+
+### Eliminar usuario (sólo admin)
+DELETE http://localhost:3000/usuarios/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJvcGVyYWRvcjFAbWFpbC5jb20iLCJyb2wiOiJvcGVyYWRvciIsImlhdCI6MTc1MTA2ODE0MiwiZXhwIjoxNzUxMDcxNzQyfQ.8BY6Ik0F7SLS1FYIG-JNOZA5RJ4rh0SXkw8RbgbzI34

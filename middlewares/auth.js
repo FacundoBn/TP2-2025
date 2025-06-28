@@ -1,28 +1,36 @@
-// middlewares/auth.js
-import jwt from "jsonwebtoken";
+import { verificarToken as verificarJWT } from "../utils/token.js";
 
-const SECRET = "tu_clave_secreta"; // Mismo secreto que usaste para generar el token
-
+// Middleware: verificar que haya un token válido
 export const verificarToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Token no proporcionado" });
+  }
 
-  const token = authHeader.split(" ")[1]; // Espera formato: Bearer token123
+  const token = authHeader.split(" ")[1];
+  const payload = verificarJWT(token);
 
-  try {
-    const decoded = jwt.verify(token, SECRET);
-    req.user = decoded; // Lo dejamos disponible en la request
-    next();
-  } catch (error) {
+  if (!payload) {
     return res.status(403).json({ error: "Token inválido o expirado" });
   }
+
+  req.user = payload; // guarda los datos del token en req.user para usar en otros middlewares
+  next();
 };
 
-// Middleware adicional para validar rol
+// Middleware: solo permite si el usuario tiene rol admin
 export const soloAdmin = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ error: "Acceso denegado: se requiere rol admin" });
+  if (req.user.rol !== "admin") {
+    return res.status(403).json({ error: "Acceso denegado: requiere rol admin" });
+  }
+  next();
+};
+
+// Middleware: permite admin u operador
+export const adminUOperador = (req, res, next) => {
+  if (req.user.rol !== "admin" && req.user.rol !== "operador") {
+    return res.status(403).json({ error: "Acceso denegado: requiere rol válido" });
   }
   next();
 };

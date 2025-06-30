@@ -5,7 +5,7 @@ import {
   createEstacionamiento,
   updateEstacionamiento,
   deleteEstacionamiento
-} from "../controllers/estacionamiento.controller.js";
+} from "../controllers/estacionamientoController.js";
 
 import { verificarToken, soloAdmin } from "../middlewares/auth.js";
 

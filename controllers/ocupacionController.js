@@ -145,11 +145,11 @@ export const salirVehiculoPorPatente = async (req, res) => {
   const { patente } = req.params;
 
   try {
-
     const formatoPatente = /^([A-Z]{3}[0-9]{3}|[A-Z]{2}[0-9]{3}[A-Z]{2})$/;
     if (!formatoPatente.test(patente)) {
       return res.status(400).json({ mensaje: "Formato de patente inválido. Ej: AAA123 o AA123BB" });
     }
+
     const ocupacion = await Ocupacion.findOne({
       where: {
         patente,
@@ -162,12 +162,12 @@ export const salirVehiculoPorPatente = async (req, res) => {
     }
 
     const ahora = new Date();
-    ocupacion.hora_salida = ahora;
-    await ocupacion.save();
-
     const entrada = new Date(ocupacion.hora_entrada);
     const duracionHoras = Math.ceil((ahora - entrada) / (1000 * 60 * 60));
     const tarifa = duracionHoras * 1000;
+
+    ocupacion.hora_salida = ahora;
+    await ocupacion.save();
 
     const lugar = await Lugar.findByPk(ocupacion.lugar_id);
     if (lugar) {
@@ -176,9 +176,12 @@ export const salirVehiculoPorPatente = async (req, res) => {
     }
 
     return res.json({
-      mensaje: "Salida registrada",
+      ticket: "🎫 Ticket de Estadia",
+      patente: ocupacion.patente,
+      hora_entrada: entrada.toLocaleString(),
+      hora_salida: ahora.toLocaleString(),
       horas: duracionHoras,
-      tarifa
+      tarifa: `$${tarifa}`
     });
 
   } catch (error) {
@@ -189,3 +192,5 @@ export const salirVehiculoPorPatente = async (req, res) => {
     });
   }
 };
+
+

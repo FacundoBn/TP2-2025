@@ -1,7 +1,8 @@
-/* Este archivo se va a encargar de generar y verificar tokens JWT. */
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-const SECRET_KEY = "tu_clave_secreta_super_segura"; // En producción usarías una variable de entorno
+const SECRET_KEY = process.env.PASS_TOKEN;
 
 // Generar token
 export const generarToken = (payload) => {

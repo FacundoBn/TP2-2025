@@ -68,7 +68,7 @@ export const deleteEstacionamiento = async (req, res) => {
 
 
   try {
-    const estac = await Estacionamiento.findByPk(idNum);
+    const estac = await Estacionamiento.findByPk(id);
     if (!estac) {
       return res.status(404).json({ error: "Estacionamiento no encontrado." });
     }

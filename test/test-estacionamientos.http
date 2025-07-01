@@ -1,53 +1,79 @@
-
-
-### Login y recibir cookie con token
+### [LOGIN] Login - recibe cookie con token (para acceder a rutas protegidas)
 POST http://localhost:3000/usuarios/login
 Content-Type: application/json
-
 {
-  "email": "admin@correo.com",
-  "password": "admin123"
+"email": "admin@admin.com",
+"password": "admin123"
 }
-
-### Acceder a ruta protegida con cookie (token en background)
-GET http://localhost:3000/usuarios
-
-### Logout - eliminar token
+### [LOGOUT] Logout - cierra la sesión del usuario actual (borra cookie del token)
 POST http://localhost:3000/usuarios/logout
-
-
-### Listar usuarios (requiere token válido)
+### [USUARIOS] Listar usuarios (requiere token en cookie, accesible solo por admin)
 GET http://localhost:3000/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiYWRtaW4iLCJpYXQiOjE3NTExMjQ1MjAsImV4cCI6MTc1MTEyODEyMH0.MsxuWq1wqyeinaasY2ZUsAHcYxqiMnhS1mZB_BfFSiQ
-
-### Crear usuario (sólo admin)
+### [USUARIOS] Crear nuevo usuario (solo admin puede hacerlo)
 POST http://localhost:3000/usuarios
 Content-Type: application/json
-
 {
-  "nombre": "Operador prueba roles",
-  "email": "operador1@mail.com",
-  "password": "operador12345",
-  "rol": "operador"
+"nombre": "Operador prueba",
+"email": "operador@mail.com",
+"password": "operador123",
+"rol": "operador"
 }
-
-### Eliminar usuario (sólo admin)
+### [USUARIOS] Eliminar usuario por ID (sólo admin)
 DELETE http://localhost:3000/usuarios/5
-
-
-### Crear vehículo
+---
+### [VEHICULOS] Crear vehículo
 POST http://localhost:3000/vehiculos
-
 Content-Type: application/json
-
 {
-  "patente": "YZ12",
-  "marca": "Ford",
-  "modelo": "Fiesta"
+"patente": "XYZ123",
+"marca": "Peugeot",
+"modelo": "208"
 }
-
-### Listar vehículos
+### [VEHICULOS] Listar todos los vehículos registrados
 GET http://localhost:3000/vehiculos
-
-### Eliminar vehículo
+### [VEHICULOS] Obtener vehículo por patente
+GET http://localhost:3000/vehiculos/XYZ123
+### [VEHICULOS] Eliminar vehículo (por patente)
 DELETE http://localhost:3000/vehiculos/XYZ123
+---
+### [ESTACIONAMIENTOS] Crear nuevo lugar de estacionamiento
+POST http://localhost:3000/estacionamientos
+Content-Type: application/json
+{
+"ubicacion": "Piso 1 - Lugar 5",
+"estado": "disponible"
+}
+### [ESTACIONAMIENTOS] Ver todos los lugares
+GET http://localhost:3000/estacionamientos
+### [ESTACIONAMIENTOS] Ver lugares disponibles
+GET http://localhost:3000/estacionamientos/disponibles
+### [ESTACIONAMIENTOS] Actualizar un lugar por ID
+PUT http://localhost:3000/estacionamientos/1
+Content-Type: application/json
+{
+"ubicacion": "Piso 1 - Lugar 5",
+"estado": "ocupado"
+}
+### [ESTACIONAMIENTOS] Eliminar un lugar por ID
+DELETE http://localhost:3000/estacionamientos/1
+---
+### [OCUPACIONES] Ingresar vehículo al estacionamiento (ocupa un lugar disponible automáticamente)
+POST http://localhost:3000/ocupaciones/ingresar
+Content-Type: application/json
+{
+"patente": "XYZ123"
+}
+### [OCUPACIONES] Ver ocupaciones activas (vehículos que aún no salieron)
+GET http://localhost:3000/ocupaciones/activos
+### [OCUPACIONES] Ver historial completo de ocupaciones (activas e inactivas)
+GET http://localhost:3000/ocupaciones/historial
+### [OCUPACIONES] Ver ocupaciones inactivas (vehículos que ya salieron)
+GET http://localhost:3000/ocupaciones/inactivos
+### [OCUPACIONES] Registrar salida por ID de ocupación
+PUT http://localhost:3000/ocupaciones/salir/1
+### [OCUPACIONES] Registrar salida por patente
+PUT http://localhost:3000/ocupaciones/salir/patente/XYZ123
+### [OCUPACIONES] Verificar si un lugar está ocupado por ID
+GET http://localhost:3000/ocupaciones/lugar/1
+### [OCUPACIONES] Eliminar ocupación manualmente (requiere admin)
+DELETE http://localhost:3000/ocupaciones/eliminar/1

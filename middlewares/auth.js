@@ -2,7 +2,6 @@ import { verificarToken as verificarJWT } from "../utils/token.js";
 
 // Middleware: verificar que haya un token válido
 export const verificarToken = (req, res, next) => {
-  // ✅ Leer el token desde la cookie
   const token = req.cookies.token;
 
   if (!token) {
@@ -15,14 +14,14 @@ export const verificarToken = (req, res, next) => {
   }
 
   req.user = decoded;
+  console.log("🛡️ Usuario autenticado:", req.user); // DEBUG
   next();
 };
 
 // Middleware: solo permite si el usuario tiene rol admin
 export const soloAdmin = (req, res, next) => {
-  if (req.user.rol !== "admin") {
+  if (!req.user || req.user.rol !== "admin") {
     return res.status(403).json({ error: "Acceso denegado: requiere rol admin" });
   }
   next();
 };
-
